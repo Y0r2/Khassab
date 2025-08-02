@@ -12,6 +12,7 @@
 ## 🧩 محتويات المشروع
 
 ### 📱 [Khassab App](./Khassab%20App/)
+<img width="1835" height="1023" alt="Image" src="https://github.com/user-attachments/assets/6766acbe-b84c-4013-ac54-20791eb251da" />
 تطبيق Flutter بيئي تفاعلي للمستخدمين، مرتبط بالعربات الذكية.
 
 **الميزات:**
@@ -57,3 +58,4 @@
 ```bash
 git clone https://github.com/Y0r2/Khassab.git
 cd Khassab
+
