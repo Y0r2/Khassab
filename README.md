@@ -197,18 +197,6 @@ lib/
 2. إنشاء branch جديد (`git checkout -b feature/AmazingFeature`)
 3. Commit التغييرات (`git commit -m 'Add some AmazingFeature'`)
 4. Push للـ branch (`git push origin feature/AmazingFeature`)
-5. فتح Pull Request
-
-## 📄 الترخيص
-
-هذا المشروع مرخص تحت رخصة MIT - راجع ملف [LICENSE](LICENSE) للتفاصيل.
-
-## 📞 التواصل
-
-- **البريد الإلكتروني**: support@khassab.com
-- **الهاتف**: +966 11 234 5678
-- **الموقع**: [khassab.com](https://khassab.com)
-
 ---
 
 **خصب - نحو بيئة أفضل للجميع 🌱**
