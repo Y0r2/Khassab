@@ -90,16 +90,29 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   child: Column(
                     children: [
+                      // إضافة صورة الشعار
                       Container(
-                        padding: const EdgeInsets.all(16),
-                        decoration: const BoxDecoration(
-                          color: Color(0xFF4CAF50),
-                          shape: BoxShape.circle,
-                        ),
-                        child: const Icon(
-                          Icons.eco,
-                          size: 48,
+                        width: 100,
+                        height: 100,
+                        decoration: BoxDecoration(
                           color: Colors.white,
+                          borderRadius: BorderRadius.circular(20),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.3),
+                              blurRadius: 10,
+                              offset: const Offset(0, 3),
+                            ),
+                          ],
+                        ),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(20),
+                          child: Image.asset(
+                            'images/logo_app.png',
+                            width: 100,
+                            height: 100,
+                            fit: BoxFit.contain,
+                          ),
                         ),
                       ),
                       const SizedBox(height: 16),

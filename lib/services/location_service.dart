@@ -1,3 +1,4 @@
+import 'dart:math' as math;
 import 'package:location/location.dart';
 import 'package:geocoding/geocoding.dart' as geocoding;
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -71,19 +72,18 @@ class LocationService {
   double calculateDistance(LatLng point1, LatLng point2) {
     const double earthRadius = 6371; // نصف قطر الأرض بالكيلومتر
 
-    double lat1Rad = point1.latitude * (3.141592653589793 / 180);
-    double lat2Rad = point2.latitude * (3.141592653589793 / 180);
-    double deltaLatRad =
-        (point2.latitude - point1.latitude) * (3.141592653589793 / 180);
+    double lat1Rad = point1.latitude * (math.pi / 180);
+    double lat2Rad = point2.latitude * (math.pi / 180);
+    double deltaLatRad = (point2.latitude - point1.latitude) * (math.pi / 180);
     double deltaLngRad =
-        (point2.longitude - point1.longitude) * (3.141592653589793 / 180);
+        (point2.longitude - point1.longitude) * (math.pi / 180);
 
-    double a = (deltaLatRad / 2).sin() * (deltaLatRad / 2).sin() +
-        lat1Rad.cos() *
-            lat2Rad.cos() *
-            (deltaLngRad / 2).sin() *
-            (deltaLngRad / 2).sin();
-    double c = 2 * (a.sqrt()).atan2((1 - a).sqrt());
+    double a = math.sin(deltaLatRad / 2) * math.sin(deltaLatRad / 2) +
+        math.cos(lat1Rad) *
+            math.cos(lat2Rad) *
+            math.sin(deltaLngRad / 2) *
+            math.sin(deltaLngRad / 2);
+    double c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a));
 
     return earthRadius * c;
   }

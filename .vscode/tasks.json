@@ -13,6 +13,42 @@
 			"group": "build",
 			"isBackground": false,
 			"problemMatcher": []
+		},
+		{
+			"label": "بناء APK للهاتف",
+			"type": "shell",
+			"command": "flutter",
+			"args": [
+				"build",
+				"apk",
+				"--debug"
+			],
+			"isBackground": false,
+			"group": "build"
+		},
+		{
+			"label": "تشغيل على الهاتف",
+			"type": "shell",
+			"command": "flutter",
+			"args": [
+				"run",
+				"-d",
+				"android"
+			],
+			"isBackground": false,
+			"group": "build"
+		},
+		{
+			"label": "تشغيل على VOG L29",
+			"type": "shell",
+			"command": "flutter",
+			"args": [
+				"run",
+				"-d",
+				"DUM7N19613000280"
+			],
+			"isBackground": false,
+			"group": "build"
 		}
 	]
 }

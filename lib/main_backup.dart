@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'firebase_options.dart';
 import 'constants/app_constants.dart';
 import 'pages/register_page.dart';
-import 'pages/map_page_simple.dart';
-import 'pages/qr_scanner_page.dart';
-import 'splash_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -97,38 +95,9 @@ class KhassabApp extends StatelessWidget {
         useMaterial3: true,
       ),
 
-      // الصفحة الرئيسية تبدأ بشاشة البداية
-      home: const SplashScreenWrapper(),
+      // الصفحة الرئيسية هي صفحة تسجيل الدخول
+      home: const LoginPage(),
     );
-  }
-}
-
-// شاشة البداية مع الانتقال التلقائي لصفحة تسجيل الدخول
-class SplashScreenWrapper extends StatefulWidget {
-  const SplashScreenWrapper({super.key});
-
-  @override
-  State<SplashScreenWrapper> createState() => _SplashScreenWrapperState();
-}
-
-class _SplashScreenWrapperState extends State<SplashScreenWrapper> {
-  @override
-  void initState() {
-    super.initState();
-    // الانتقال لصفحة تسجيل الدخول بعد 3 ثوانٍ
-    Future.delayed(const Duration(seconds: 3), () {
-      if (mounted) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const LoginPage()),
-        );
-      }
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return const SplashScreen();
   }
 }
 
@@ -201,45 +170,6 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   child: Column(
                     children: [
-                      // شعار المشروع
-                      Container(
-                        width: 80,
-                        height: 80,
-                        margin: const EdgeInsets.only(
-                            bottom: AppDimensions.spacingMedium),
-                        decoration: BoxDecoration(
-                          borderRadius:
-                              BorderRadius.circular(AppDimensions.radiusMedium),
-                          boxShadow: [
-                            BoxShadow(
-                              color: AppColors.primaryGreen.withOpacity(0.3),
-                              blurRadius: 10,
-                              offset: const Offset(0, 4),
-                            ),
-                          ],
-                        ),
-                        child: ClipRRect(
-                          borderRadius:
-                              BorderRadius.circular(AppDimensions.radiusMedium),
-                          child: Image.asset(
-                            'images/logo_app.png',
-                            fit: BoxFit.cover,
-                            errorBuilder: (context, error, stackTrace) {
-                              return Container(
-                                decoration: const BoxDecoration(
-                                  color: AppColors.primaryGreen,
-                                  shape: BoxShape.circle,
-                                ),
-                                child: const Icon(
-                                  Icons.eco,
-                                  size: 40,
-                                  color: Colors.white,
-                                ),
-                              );
-                            },
-                          ),
-                        ),
-                      ),
                       Container(
                         padding:
                             const EdgeInsets.all(AppDimensions.paddingMedium),
@@ -434,7 +364,7 @@ class _HomePageState extends State<HomePage> {
 
   final List<Widget> _pages = [
     const DashboardPage(),
-    const MapPage(),
+    const MapPageAseer(),
     const ChatPage(),
     const ProfilePage(),
   ];
@@ -484,105 +414,47 @@ class DashboardPage extends StatelessWidget {
           padding: const EdgeInsets.all(AppDimensions.paddingLarge),
           child: Column(
             children: [
-              // ترحيب مطور بأحمد
+              // ترحيب
               Container(
-                margin: const EdgeInsets.symmetric(horizontal: 4),
                 padding: const EdgeInsets.all(AppDimensions.paddingLarge),
                 decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: [
-                      AppColors.primaryGreen,
-                      AppColors.primaryGreen.withOpacity(0.8),
-                    ],
+                  gradient: const LinearGradient(
+                    colors: [AppColors.primaryGreen, Color(0xFF66BB6A)],
                   ),
-                  borderRadius: BorderRadius.circular(20),
-                  boxShadow: [
-                    BoxShadow(
-                      color: AppColors.primaryGreen.withOpacity(0.3),
-                      blurRadius: 15,
-                      offset: const Offset(0, 8),
-                    ),
-                  ],
+                  borderRadius:
+                      BorderRadius.circular(AppDimensions.radiusLarge),
                 ),
                 child: Row(
                   children: [
-                    // صورة شخصية أنيقة
-                    Container(
-                      width: 60,
-                      height: 60,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(30),
-                        border: Border.all(color: Colors.white, width: 3),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.1),
-                            blurRadius: 8,
-                            offset: const Offset(0, 4),
-                          ),
-                        ],
-                      ),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(27),
-                        child: const Icon(
-                          Icons.person,
-                          size: 35,
-                          color: AppColors.primaryGreen,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: AppDimensions.spacingMedium),
-
-                    // معلومات الترحيب
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           const Text(
-                            'أهلاً وسهلاً، أحمد 👋',
+                            'أهلاً وسهلاً، أحمد',
                             style: TextStyle(
                               color: Colors.white,
-                              fontSize: 22,
+                              fontSize: 20,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          const SizedBox(height: 6),
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 12,
-                              vertical: 4,
-                            ),
-                            decoration: BoxDecoration(
-                              color: Colors.white.withOpacity(0.2),
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: const Text(
-                              'لنحمي بيئة عسير الجميلة معاً 🌱',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 13,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
+                          const SizedBox(height: AppDimensions.spacingSmall),
+                          const Text(
+                            'لنحمي بيئة عسير الجميلة معاً! 🌱',
+                            style: TextStyle(color: Colors.white, fontSize: 14),
                           ),
                         ],
                       ),
                     ),
-
-                    // أيقونة جانبية
                     Container(
-                      padding: const EdgeInsets.all(12),
+                      padding: const EdgeInsets.all(AppDimensions.paddingSmall),
                       decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.15),
-                        borderRadius: BorderRadius.circular(15),
+                        color: Colors.white.withOpacity(0.2),
+                        borderRadius:
+                            BorderRadius.circular(AppDimensions.radiusMedium),
                       ),
-                      child: const Icon(
-                        Icons.eco,
-                        size: 28,
-                        color: Colors.white,
-                      ),
+                      child: const Icon(Icons.landscape,
+                          size: 40, color: Colors.white),
                     ),
                   ],
                 ),
@@ -631,7 +503,7 @@ class DashboardPage extends StatelessWidget {
                   child: InkWell(
                     borderRadius:
                         BorderRadius.circular(AppDimensions.radiusLarge),
-                    onTap: () => _openQRScanner(context),
+                    onTap: () => _showQRSuccessDialog(context),
                     child: Padding(
                       padding: const EdgeInsets.all(AppDimensions.paddingLarge),
                       child: Row(
@@ -859,15 +731,6 @@ class DashboardPage extends StatelessWidget {
     );
   }
 
-  void _openQRScanner(BuildContext context) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => const QRScannerPage(),
-      ),
-    );
-  }
-
   void _showQRSuccessDialog(BuildContext context) {
     showDialog(
       context: context,
@@ -913,92 +776,16 @@ class DashboardPage extends StatelessWidget {
   }
 }
 
-// صفحة الدردشة
-class ChatPage extends StatefulWidget {
-  const ChatPage({super.key});
-
-  @override
-  State<ChatPage> createState() => _ChatPageState();
-}
-
-class _ChatPageState extends State<ChatPage> {
-  final TextEditingController _messageController = TextEditingController();
-  final List<ChatMessage> _messages = [];
-
-  @override
-  void initState() {
-    super.initState();
-    // إضافة رسائل ترحيبية
-    _messages.addAll([
-      ChatMessage(
-        text: 'مرحباً بك في خدمة الدعم الفني لتطبيق خصاب عسير 🌱',
-        isUser: false,
-        timestamp: DateTime.now(),
-      ),
-      ChatMessage(
-        text: 'كيف يمكنني مساعدتك اليوم؟',
-        isUser: false,
-        timestamp: DateTime.now(),
-      ),
-    ]);
-  }
-
-  void _sendMessage() {
-    if (_messageController.text.trim().isEmpty) return;
-
-    setState(() {
-      _messages.add(ChatMessage(
-        text: _messageController.text,
-        isUser: true,
-        timestamp: DateTime.now(),
-      ));
-    });
-
-    // محاكاة رد تلقائي
-    _autoReply(_messageController.text);
-    _messageController.clear();
-  }
-
-  void _autoReply(String userMessage) {
-    String reply = _generateAutoReply(userMessage);
-
-    Future.delayed(const Duration(milliseconds: 1000), () {
-      if (mounted) {
-        setState(() {
-          _messages.add(ChatMessage(
-            text: reply,
-            isUser: false,
-            timestamp: DateTime.now(),
-          ));
-        });
-      }
-    });
-  }
-
-  String _generateAutoReply(String message) {
-    message = message.toLowerCase();
-
-    if (message.contains('خريطة') || message.contains('موقع')) {
-      return 'يمكنك الوصول للخريطة التفاعلية من خلال تبويب "الخريطة" في التطبيق. ستجد مواقع جميع العربات الذكية والحدائق المخصبة في منطقة عسير 🗺️';
-    } else if (message.contains('عربة') || message.contains('شاحنة')) {
-      return 'العربات الذكية متوفرة في جميع محافظات عسير. يمكنك رؤية مستوى الامتلاء والحالة مباشرة على الخريطة 🚚';
-    } else if (message.contains('سماد') || message.contains('تسميد')) {
-      return 'السماد العضوي متوفر في جميع العربات. يتم تحديث مستويات السماد كل ساعة على الخريطة 🌿';
-    } else if (message.contains('مشكلة') || message.contains('عطل')) {
-      return 'نعتذر عن أي إزعاج. يرجى تقديم تفاصيل أكثر عن المشكلة وسيتم توجيهك لفريق الدعم المختص 🔧';
-    } else if (message.contains('شكر') || message.contains('ممتاز')) {
-      return 'العفو! نحن سعداء لخدمتك. إذا كان لديك أي استفسار آخر فلا تتردد في السؤال 😊';
-    } else {
-      return 'شكراً لتواصلك معنا. فريق الدعم الفني سيرد عليك في أقرب وقت. يمكنك أيضاً استكشاف الخريطة التفاعلية في التطبيق 💚';
-    }
-  }
+// صفحة الخريطة المبسطة لعسير
+class MapPageAseer extends StatelessWidget {
+  const MapPageAseer({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'الدعم والمساعدة',
+          'خريطة منطقة عسير',
           style: TextStyle(
             fontWeight: FontWeight.bold,
             color: AppColors.darkGreen,
@@ -1006,181 +793,318 @@ class _ChatPageState extends State<ChatPage> {
         ),
         backgroundColor: Colors.white,
         elevation: 0,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.phone, color: AppColors.primaryGreen),
-            onPressed: () {
-              // إظهار معلومات الاتصال
-              showDialog(
-                context: context,
-                builder: (context) => AlertDialog(
-                  title: const Text('معلومات الاتصال'),
-                  content: const Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text('رقم الهاتف: 920003344'),
-                      SizedBox(height: 8),
-                      Text('البريد الإلكتروني: support@khassab.sa'),
-                    ],
-                  ),
-                  actions: [
-                    TextButton(
-                      onPressed: () => Navigator.pop(context),
-                      child: const Text('إغلاق'),
+      ),
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              AppColors.backgroundLight,
+              AppColors.primaryGreen.withOpacity(0.1),
+            ],
+          ),
+        ),
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(AppDimensions.paddingLarge),
+          child: Column(
+            children: [
+              // بطاقة معلومات المنطقة
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(AppDimensions.paddingLarge),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius:
+                      BorderRadius.circular(AppDimensions.radiusLarge),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.1),
+                      blurRadius: 10,
+                      offset: const Offset(0, 5),
                     ),
                   ],
                 ),
-              );
-            },
+                child: Column(
+                  children: [
+                    const Icon(
+                      Icons.landscape,
+                      size: 64,
+                      color: AppColors.primaryGreen,
+                    ),
+                    const SizedBox(height: AppDimensions.spacingMedium),
+                    const Text(
+                      'منطقة عسير',
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.textPrimary,
+                      ),
+                    ),
+                    const SizedBox(height: AppDimensions.spacingSmall),
+                    const Text(
+                      'جنة الطبيعة في المملكة العربية السعودية',
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: AppColors.primaryGreen,
+                      ),
+                    ),
+                    const SizedBox(height: AppDimensions.spacingMedium),
+                    Container(
+                      padding:
+                          const EdgeInsets.all(AppDimensions.paddingMedium),
+                      decoration: BoxDecoration(
+                        color: AppColors.backgroundCard,
+                        borderRadius:
+                            BorderRadius.circular(AppDimensions.radiusSmall),
+                      ),
+                      child: const Text(
+                        'خريطة Google Maps ستعرض مواقع العربات الذكية والحدائق المخصبة في جميع محافظات منطقة عسير الجميلة',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(fontSize: 14),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              const SizedBox(height: AppDimensions.spacingLarge),
+
+              // محافظات منطقة عسير
+              const Text(
+                'محافظات منطقة عسير',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.textPrimary,
+                ),
+              ),
+
+              const SizedBox(height: AppDimensions.spacingMedium),
+
+              _buildCityCard(
+                'أبها',
+                'العاصمة الإدارية - مدينة الضباب',
+                'عربتان ذكيتان، منتزه عسير الوطني',
+                Icons.location_city,
+                '75% متاحة',
+              ),
+
+              _buildCityCard(
+                'خميس مشيط',
+                'المدينة التوأم - المركز التجاري',
+                'عربتان ذكيتان، حديقة الملك عبدالله',
+                Icons.business,
+                '85% متاحة',
+              ),
+
+              _buildCityCard(
+                'بيشة',
+                'بوابة عسير الشمالية',
+                'عربة ذكية واحدة، مشاتل بيشة',
+                Icons.agriculture,
+                '55% متاحة',
+              ),
+
+              _buildCityCard(
+                'النماص',
+                'مدينة الضباب والورود',
+                'عربة ذكية واحدة، حدائق جبلية',
+                Icons.local_florist,
+                '90% متاحة',
+              ),
+
+              _buildCityCard(
+                'تنومة',
+                'المدرجات الزراعية التراثية',
+                'عربة ذكية واحدة، مزارع مدرجة',
+                Icons.terrain,
+                '70% متاحة',
+              ),
+
+              _buildCityCard(
+                'محايل عسير',
+                'الوادي الأخضر',
+                'عربة ذكية واحدة، مزارع استوائية',
+                Icons.nature,
+                '65% متاحة',
+              ),
+
+              _buildCityCard(
+                'السودة',
+                'أعلى قمة في المملكة (3015م)',
+                'غابات العرعر البرية النادرة',
+                Icons.forest,
+                'تم التسميد اليوم',
+              ),
+
+              const SizedBox(height: AppDimensions.spacingXLarge),
+
+              // رسالة تطوير
+              Container(
+                padding: const EdgeInsets.all(AppDimensions.paddingLarge),
+                decoration: BoxDecoration(
+                  color: AppColors.primaryGreen.withOpacity(0.1),
+                  borderRadius:
+                      BorderRadius.circular(AppDimensions.radiusLarge),
+                  border: Border.all(
+                      color: AppColors.primaryGreen.withOpacity(0.3)),
+                ),
+                child: const Column(
+                  children: [
+                    Icon(
+                      Icons.construction,
+                      size: 48,
+                      color: AppColors.primaryGreen,
+                    ),
+                    SizedBox(height: AppDimensions.spacingMedium),
+                    Text(
+                      'خريطة Google Maps قيد التطوير',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.primaryGreen,
+                      ),
+                    ),
+                    SizedBox(height: AppDimensions.spacingSmall),
+                    Text(
+                      'سيتم عرض خريطة تفاعلية تظهر جميع العربات الذكية والحدائق المخصبة في منطقة عسير قريباً',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: AppColors.primaryGreen,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
-        ],
-      ),
-      body: Column(
-        children: [
-          Expanded(
-            child: ListView.builder(
-              reverse: true,
-              padding: const EdgeInsets.all(16),
-              itemCount: _messages.length,
-              itemBuilder: (context, index) {
-                final message = _messages[_messages.length - 1 - index];
-                return _buildMessageBubble(message);
-              },
-            ),
-          ),
-          _buildMessageInput(),
-        ],
+        ),
       ),
     );
   }
 
-  Widget _buildMessageBubble(ChatMessage message) {
+  Widget _buildCityCard(String cityName, String description, String facilities,
+      IconData icon, String status) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      child: Row(
-        mainAxisAlignment:
-            message.isUser ? MainAxisAlignment.end : MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.end,
-        children: [
-          if (!message.isUser) ...[
-            const CircleAvatar(
-              radius: 16,
-              backgroundColor: AppColors.primaryGreen,
-              child: Icon(Icons.support_agent, color: Colors.white, size: 20),
-            ),
-            const SizedBox(width: 8),
-          ],
-          Flexible(
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-              decoration: BoxDecoration(
-                color:
-                    message.isUser ? AppColors.primaryGreen : Colors.grey[200],
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    message.text,
-                    style: TextStyle(
-                      color: message.isUser ? Colors.white : Colors.black87,
-                      fontSize: 16,
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    '${message.timestamp.hour}:${message.timestamp.minute.toString().padLeft(2, '0')}',
-                    style: TextStyle(
-                      color: message.isUser ? Colors.white70 : Colors.grey[600],
-                      fontSize: 12,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          if (message.isUser) ...[
-            const SizedBox(width: 8),
-            const CircleAvatar(
-              radius: 16,
-              backgroundColor: AppColors.darkGreen,
-              child: Icon(Icons.person, color: Colors.white, size: 20),
-            ),
-          ],
-        ],
-      ),
-    );
-  }
-
-  Widget _buildMessageInput() {
-    return Container(
-      padding: const EdgeInsets.all(16),
+      margin: const EdgeInsets.only(bottom: AppDimensions.spacingMedium),
+      padding: const EdgeInsets.all(AppDimensions.paddingMedium),
       decoration: BoxDecoration(
         color: Colors.white,
+        borderRadius: BorderRadius.circular(AppDimensions.radiusMedium),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
-            blurRadius: 4,
-            offset: const Offset(0, -2),
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
           ),
         ],
       ),
       child: Row(
         children: [
-          Expanded(
-            child: TextField(
-              controller: _messageController,
-              decoration: InputDecoration(
-                hintText: 'اكتب رسالتك هنا...',
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(25),
-                  borderSide: BorderSide.none,
-                ),
-                filled: true,
-                fillColor: Colors.grey[100],
-                contentPadding: const EdgeInsets.symmetric(
-                  horizontal: 20,
-                  vertical: 12,
-                ),
-              ),
-              textInputAction: TextInputAction.send,
-              onSubmitted: (_) => _sendMessage(),
+          Container(
+            padding: const EdgeInsets.all(AppDimensions.paddingSmall),
+            decoration: BoxDecoration(
+              color: AppColors.primaryGreen.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(AppDimensions.radiusSmall),
+            ),
+            child: Icon(
+              icon,
+              color: AppColors.primaryGreen,
+              size: 32,
             ),
           ),
-          const SizedBox(width: 12),
-          Container(
-            decoration: const BoxDecoration(
-              color: AppColors.primaryGreen,
-              shape: BoxShape.circle,
+          const SizedBox(width: AppDimensions.spacingMedium),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  cityName,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.textPrimary,
+                  ),
+                ),
+                const SizedBox(height: AppDimensions.spacingXSmall),
+                Text(
+                  description,
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: Colors.grey[600],
+                  ),
+                ),
+                const SizedBox(height: AppDimensions.spacingXSmall),
+                Text(
+                  facilities,
+                  style: const TextStyle(
+                    fontSize: 12,
+                    color: AppColors.primaryGreen,
+                  ),
+                ),
+              ],
             ),
-            child: IconButton(
-              icon: const Icon(Icons.send, color: Colors.white),
-              onPressed: _sendMessage,
+          ),
+          Container(
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppDimensions.spacingSmall,
+              vertical: AppDimensions.spacingXSmall,
+            ),
+            decoration: BoxDecoration(
+              color: status.contains('متاحة')
+                  ? Colors.green.withOpacity(0.1)
+                  : Colors.blue.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(4.0),
+            ),
+            child: Text(
+              status,
+              style: TextStyle(
+                fontSize: 10,
+                fontWeight: FontWeight.bold,
+                color: status.contains('متاحة') ? Colors.green : Colors.blue,
+              ),
             ),
           ),
         ],
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    _messageController.dispose();
-    super.dispose();
   }
 }
 
-class ChatMessage {
-  final String text;
-  final bool isUser;
-  final DateTime timestamp;
+// صفحة الدردشة
+class ChatPage extends StatelessWidget {
+  const ChatPage({super.key});
 
-  ChatMessage({
-    required this.text,
-    required this.isUser,
-    required this.timestamp,
-  });
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('الدعم والمساعدة'),
+        backgroundColor: Colors.white,
+        elevation: 0,
+      ),
+      body: const Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.chat, size: 64, color: AppColors.primaryGreen),
+            SizedBox(height: AppDimensions.spacingMedium),
+            Text(
+              'نظام الدردشة',
+              style: TextStyle(fontSize: 18, color: AppColors.primaryGreen),
+            ),
+            SizedBox(height: AppDimensions.spacingSmall),
+            Text(
+              'دردشة مباشرة مع فريق الدعم',
+              style: TextStyle(fontSize: 14),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 }
 
 // صفحة الملف الشخصي
@@ -1207,125 +1131,31 @@ class ProfilePage extends StatelessWidget {
                   padding: const EdgeInsets.all(AppDimensions.paddingLarge),
                   child: Column(
                     children: [
-                      // الصورة الشخصية المحسنة
-                      Container(
-                        padding: const EdgeInsets.all(6),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(60),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.2),
-                              blurRadius: 15,
-                              offset: const Offset(0, 8),
-                            ),
-                          ],
-                        ),
-                        child: CircleAvatar(
-                          radius: 50,
-                          backgroundColor:
-                              AppColors.primaryGreen.withOpacity(0.1),
-                          child: const Text(
-                            'أ.م',
-                            style: TextStyle(
-                              fontSize: 32,
-                              fontWeight: FontWeight.bold,
-                              color: AppColors.primaryGreen,
-                            ),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: AppDimensions.spacingLarge),
-
-                      // اسم المستخدم مع تصميم أنيق
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 20,
-                          vertical: 8,
-                        ),
-                        decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.15),
-                          borderRadius: BorderRadius.circular(25),
-                          border: Border.all(
-                            color: Colors.white.withOpacity(0.3),
-                            width: 1,
-                          ),
-                        ),
-                        child: const Text(
-                          'أحمد محمد 👋',
-                          style: TextStyle(
-                            fontSize: 24,
+                      CircleAvatar(
+                        radius: 50,
+                        backgroundColor: Colors.white,
+                        child: Text(
+                          'أ.م',
+                          style: const TextStyle(
+                            fontSize: 28,
                             fontWeight: FontWeight.bold,
-                            color: Colors.white,
+                            color: AppColors.primaryGreen,
                           ),
                         ),
                       ),
                       const SizedBox(height: AppDimensions.spacingMedium),
-
-                      // معلومات إضافية بتصميم جميل
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 12,
-                              vertical: 6,
-                            ),
-                            decoration: BoxDecoration(
-                              color: Colors.white.withOpacity(0.2),
-                              borderRadius: BorderRadius.circular(15),
-                            ),
-                            child: const Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Icon(
-                                  Icons.location_on,
-                                  size: 16,
-                                  color: Colors.white,
-                                ),
-                                SizedBox(width: 4),
-                                Text(
-                                  'منطقة عسير',
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(width: 12),
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 12,
-                              vertical: 6,
-                            ),
-                            decoration: BoxDecoration(
-                              color: Colors.white.withOpacity(0.2),
-                              borderRadius: BorderRadius.circular(15),
-                            ),
-                            child: const Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Icon(
-                                  Icons.calendar_today,
-                                  size: 16,
-                                  color: Colors.white,
-                                ),
-                                SizedBox(width: 4),
-                                Text(
-                                  'يناير 2024',
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
+                      const Text(
+                        'أحمد محمد',
+                        style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                      const SizedBox(height: AppDimensions.spacingSmall),
+                      const Text(
+                        'مقيم في منطقة عسير - انضم في يناير 2024',
+                        style: TextStyle(fontSize: 14, color: Colors.white),
                       ),
                     ],
                   ),
@@ -1342,73 +1172,26 @@ class ProfilePage extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // عنوان الإنجازات بتصميم جميل
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 16,
-                            vertical: 12,
-                          ),
-                          decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                              colors: [
-                                AppColors.primaryGreen.withOpacity(0.1),
-                                AppColors.primaryGreen.withOpacity(0.05),
-                              ],
-                            ),
-                            borderRadius: BorderRadius.circular(15),
-                            border: Border.all(
-                              color: AppColors.primaryGreen.withOpacity(0.2),
-                            ),
-                          ),
-                          child: Row(
-                            children: [
-                              Container(
-                                padding: const EdgeInsets.all(8),
-                                decoration: BoxDecoration(
-                                  color: AppColors.primaryGreen,
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                child: const Icon(
-                                  Icons.emoji_events,
-                                  color: Colors.white,
-                                  size: 20,
-                                ),
-                              ),
-                              const SizedBox(width: 12),
-                              const Text(
-                                'إنجازاتي البيئية في عسير 🏆',
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                  color: AppColors.darkGreen,
-                                ),
-                              ),
-                            ],
+                        const Text(
+                          'إنجازاتي البيئية في عسير',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.darkGreen,
                           ),
                         ),
-                        const SizedBox(height: AppDimensions.spacingLarge),
+                        const SizedBox(height: AppDimensions.spacingMedium),
 
-                        // إحصائيات مطورة
                         Row(
                           children: [
                             Expanded(
-                              child: _buildEnhancedStatCard(
-                                Icons.delete_outline,
-                                '15',
-                                'مرة تخلص',
-                                'من النفايات',
-                                Colors.red.shade400,
-                              ),
+                              child: _buildStatCard(Icons.delete_outline, '15',
+                                  'مرات التخلص\nمن النفايات'),
                             ),
-                            const SizedBox(width: AppDimensions.spacingMedium),
+                            const SizedBox(width: AppDimensions.spacingSmall),
                             Expanded(
-                              child: _buildEnhancedStatCard(
-                                Icons.local_florist,
-                                '23',
-                                'نبتة في عسير',
-                                'ساعدت بتسميدها',
-                                Colors.green.shade400,
-                              ),
+                              child: _buildStatCard(Icons.local_florist, '23',
+                                  'نبتة في عسير\nساعدت في تسميدها'),
                             ),
                           ],
                         ),
@@ -1418,42 +1201,22 @@ class ProfilePage extends StatelessWidget {
                         Row(
                           children: [
                             Expanded(
-                              child: _buildEnhancedStatCard(
-                                Icons.landscape,
-                                '5',
-                                'مواقع بعسير',
-                                'قمت بزيارتها',
-                                Colors.blue.shade400,
-                              ),
+                              child: _buildStatCard(
+                                  Icons.landscape, '5', 'مواقع في عسير\nزرتها'),
                             ),
-                            const SizedBox(width: AppDimensions.spacingMedium),
+                            const SizedBox(width: AppDimensions.spacingSmall),
                             Expanded(
-                              child: _buildEnhancedStatCard(
-                                Icons.eco,
-                                '2.3',
-                                'كيلو سماد',
-                                'طبيعي أنتجته',
-                                Colors.orange.shade400,
-                              ),
+                              child: _buildStatCard(
+                                  Icons.eco, '2.3 كغ', 'سماد طبيعي\nأنتجته'),
                             ),
                           ],
                         ),
 
                         const SizedBox(height: AppDimensions.spacingXLarge),
 
-                        // زر تسجيل الخروج بتصميم محسن
-                        Container(
+                        // زر تسجيل الخروج
+                        SizedBox(
                           width: double.infinity,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(15),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.red.withOpacity(0.3),
-                                blurRadius: 10,
-                                offset: const Offset(0, 4),
-                              ),
-                            ],
-                          ),
                           child: ElevatedButton.icon(
                             onPressed: () {
                               Navigator.pushAndRemoveUntil(
@@ -1463,52 +1226,26 @@ class ProfilePage extends StatelessWidget {
                                 (route) => false,
                               );
                             },
-                            icon: const Icon(Icons.logout, color: Colors.white),
-                            label: const Text(
-                              'تسجيل الخروج',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
+                            icon: const Icon(Icons.logout),
+                            label: const Text('تسجيل الخروج'),
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.red.shade400,
-                              elevation: 0,
+                              backgroundColor: Colors.red,
                               padding: const EdgeInsets.symmetric(
-                                vertical: 16,
-                              ),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(15),
-                              ),
+                                  vertical: AppDimensions.paddingMedium),
                             ),
                           ),
                         ),
 
-                        const SizedBox(height: AppDimensions.spacingLarge),
+                        const SizedBox(height: AppDimensions.spacingMedium),
 
-                        // تذييل مطور
-                        Center(
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 20,
-                              vertical: 12,
-                            ),
-                            decoration: BoxDecoration(
-                              color: AppColors.primaryGreen.withOpacity(0.1),
-                              borderRadius: BorderRadius.circular(20),
-                              border: Border.all(
-                                color: AppColors.primaryGreen.withOpacity(0.2),
-                              ),
-                            ),
-                            child: const Text(
-                              'تطبيق خصب - نحو بيئة أفضل لمنطقة عسير الجميلة 🌱',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                fontSize: 13,
-                                color: AppColors.primaryGreen,
-                                fontWeight: FontWeight.w600,
-                              ),
+                        const Center(
+                          child: Text(
+                            'تطبيق خصب - نحو بيئة أفضل لمنطقة عسير الجميلة 🌱',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: AppColors.primaryGreen,
+                              fontWeight: FontWeight.w600,
                             ),
                           ),
                         ),
@@ -1555,78 +1292,6 @@ class ProfilePage extends StatelessWidget {
             label,
             textAlign: TextAlign.center,
             style: TextStyle(fontSize: 11, color: Colors.grey[700]),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildEnhancedStatCard(
-    IconData icon,
-    String value,
-    String primaryLabel,
-    String secondaryLabel,
-    Color iconColor,
-  ) {
-    return Container(
-      padding: const EdgeInsets.all(18),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: [
-          BoxShadow(
-            color: iconColor.withOpacity(0.15),
-            blurRadius: 15,
-            offset: const Offset(0, 6),
-          ),
-        ],
-        border: Border.all(
-          color: iconColor.withOpacity(0.1),
-          width: 1,
-        ),
-      ),
-      child: Column(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: iconColor.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(15),
-            ),
-            child: Icon(
-              icon,
-              color: iconColor,
-              size: 28,
-            ),
-          ),
-          const SizedBox(height: 12),
-          Text(
-            value,
-            style: TextStyle(
-              fontSize: 22,
-              fontWeight: FontWeight.bold,
-              color: iconColor,
-            ),
-          ),
-          const SizedBox(height: 6),
-          Text(
-            primaryLabel,
-            textAlign: TextAlign.center,
-            style: const TextStyle(
-              fontSize: 13,
-              fontWeight: FontWeight.w600,
-              color: AppColors.darkGreen,
-            ),
-          ),
-          const SizedBox(height: 2),
-          Text(
-            secondaryLabel,
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: 11,
-              color: Colors.grey[600],
-              fontWeight: FontWeight.w500,
-            ),
           ),
         ],
       ),
